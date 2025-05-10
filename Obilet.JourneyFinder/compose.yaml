@@ -1,0 +1,7 @@
+﻿services:
+  journeyfinder:
+    image: journeyfinder
+    build:
+      context: .
+      dockerfile: src/JourneyFinder/Dockerfile
+
