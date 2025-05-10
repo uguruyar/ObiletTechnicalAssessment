@@ -5,3 +5,15 @@
       context: .
       dockerfile: src/JourneyFinder/Dockerfile
 
+  journeyfindermvc:
+    image: journeyfindermvc
+    build:
+      context: .
+      dockerfile: src/JourneyFinderMVC/Dockerfile
+
+  journeyfindermvc-1:
+    image: journeyfindermvc-1
+    build:
+      context: .
+      dockerfile: src/JourneyFinderMVC/Dockerfile
+
