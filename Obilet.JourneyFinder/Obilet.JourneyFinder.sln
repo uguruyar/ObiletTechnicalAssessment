@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BE40DC8B-8546-42A4-A8B6-40B291AF74C8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ECD062CA-80DD-4261-8ADD-BAC17C6264C7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "src\Repositories\Repositories.csproj", "{E043F2C0-82EB-4333-B8F1-BE0269F0411B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "src\Services\Services.csproj", "{526228FB-F3AF-4A16-978D-DE07E8EADB71}"

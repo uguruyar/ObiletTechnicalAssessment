@@ -1,9 +1,24 @@
+using Infrastructure.HttpClients;
+using Infrastructure.Interfaces;
+using Middlewares;
+using Repository;
+using Repository.Interfaces;
+using Services;
+using Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<IObiletApiClient, ObiletApiClient>();
+builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
+builder.Services.AddScoped<IJourneyService, JourneyService>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ObiletSessionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
