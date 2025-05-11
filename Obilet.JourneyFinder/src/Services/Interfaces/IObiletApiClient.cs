@@ -1,6 +1,6 @@
 using Models;
 
-namespace Infrastructure.Interfaces;
+namespace Services.Interfaces;
 
 public interface IObiletApiClient
 {

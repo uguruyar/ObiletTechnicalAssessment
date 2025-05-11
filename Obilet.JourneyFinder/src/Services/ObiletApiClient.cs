@@ -1,12 +1,12 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Models;
 using Models.Requests;
 using Models.Responses;
+using Services.Interfaces;
 
-namespace Infrastructure.HttpClients;
+namespace Services;
 
 public class ObiletApiClient : IObiletApiClient
 {
@@ -51,6 +51,7 @@ public class ObiletApiClient : IObiletApiClient
         };
     }
 
+    // This method can be generic
     public async Task<string> CallObiletEndpoint(string url, object body)
     {
         var response = await _client.PostAsJsonAsync(url, body);

@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Infrastructure.Interfaces;
 using Models;
 using Models.Requests;
 using Models.Responses;
@@ -10,12 +9,12 @@ namespace Services;
 
 public class JourneyService : IJourneyService
 {
-    private readonly ISessionRepository _sessionRepository;
+    private readonly IMemoryCacheProvider _memoryCacheProvider;
     private readonly IObiletApiClient _apiClient;
 
-    public JourneyService(ISessionRepository repo, IObiletApiClient apiClient)
+    public JourneyService(IMemoryCacheProvider repo, IObiletApiClient apiClient)
     {
-        _sessionRepository = repo;
+        _memoryCacheProvider = repo;
         _apiClient = apiClient;
     }
     
@@ -92,11 +91,11 @@ public class JourneyService : IJourneyService
     
     private async Task<SessionData> GetSessionAsync()
     {
-        var session = _sessionRepository.Get();
+        var session = _memoryCacheProvider.Get();
         if (session == null)
         {
             session = await _apiClient.GetSessionAsync();
-            _sessionRepository.Save(session);
+            _memoryCacheProvider.Save(session);
         }
 
         return session;

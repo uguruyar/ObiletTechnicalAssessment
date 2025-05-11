@@ -1,5 +1,3 @@
-using Infrastructure.HttpClients;
-using Infrastructure.Interfaces;
 using Middlewares;
 using Repository;
 using Repository.Interfaces;
@@ -13,7 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<IObiletApiClient, ObiletApiClient>();
-builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
+builder.Services.AddSingleton<IMemoryCacheProvider, MemoryCacheProvider>();
 builder.Services.AddScoped<IJourneyService, JourneyService>();
 
 var app = builder.Build();
