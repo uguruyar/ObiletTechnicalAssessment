@@ -4,9 +4,7 @@ namespace Services.Interfaces;
 
 public interface IJourneyService
 {
-    Task<string> GetBusLocationsSearchAsync(string search);
-    
-    Task<string> GetAllBusLocationsAsync();
+    Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search=null);
     
     Task<GetJourneysResponse?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate);
 }

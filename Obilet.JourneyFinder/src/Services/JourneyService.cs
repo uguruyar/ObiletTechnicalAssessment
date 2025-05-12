@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Models;
 using Models.Requests;
 using Models.Responses;
@@ -18,7 +17,7 @@ public class JourneyService : IJourneyService
         _apiClient = apiClient;
     }
     
-    public async Task<string> GetBusLocationsSearchAsync(string search)
+    public async Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search=null)
     {
         var session = await GetSessionAsync();
 
@@ -34,26 +33,7 @@ public class JourneyService : IJourneyService
             }
         };
 
-        return await _apiClient.CallObiletEndpoint("api/location/getbuslocations", body);
-    }
-
-    public async Task<string> GetAllBusLocationsAsync()
-    {
-        var session = await GetSessionAsync();
-
-        var body = new GetBusLocationsRequest
-        {
-            Data = null,
-            Language = "tr-TR",
-            Date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-            DeviceSession = new DeviceSession
-            {
-                SessionId = session.SessionId,
-                DeviceId = session.DeviceId
-            }
-        };
-
-        return await _apiClient.CallObiletEndpoint("api/location/getbuslocations", body);
+        return await _apiClient.CallObiletEndpoint<GetBusLocationsResponse>("api/location/getbuslocations", body);
     }
     
     public async Task<GetJourneysResponse?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate)
@@ -77,16 +57,7 @@ public class JourneyService : IJourneyService
             }
         };
 
-        var jsonResponse = await _apiClient.CallObiletEndpoint("api/journey/getbusjourneys", request);
-
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-
-        var journeysResponse = JsonSerializer.Deserialize<GetJourneysResponse>(jsonResponse, options);
-
-        return journeysResponse;
+        return await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
     }
     
     private async Task<SessionData> GetSessionAsync()
