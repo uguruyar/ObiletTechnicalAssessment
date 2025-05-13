@@ -11,12 +11,12 @@ $(document).ready(function () {
         $('#destination').val(origin);
     });
 
-    $('#todayBtn').click(function () {
+    $('.today-btn').click(function () {
         let today = new Date().toISOString().split('T')[0];
         $('#DepartureDate').val(today);
     });
 
-    $('#tomorrowBtn').click(function () {
+    $('.tomorrow-btn').click(function () {
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         let formatted = tomorrow.toISOString().split('T')[0];
