@@ -1,10 +1,16 @@
+using Microsoft.Extensions.Options;
 using Middlewares;
+using Models.Configuration;
 using Repository;
 using Repository.Interfaces;
 using Services;
 using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add configuration
+builder.Services.Configure<ObiletApiSettings>(builder.Configuration.GetSection("ObiletApi"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ObiletApiSettings>>().Value);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -19,11 +25,9 @@ var app = builder.Build();
 
 app.UseMiddleware<ObiletSessionMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
