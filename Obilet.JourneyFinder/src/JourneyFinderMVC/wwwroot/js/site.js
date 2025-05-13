@@ -13,13 +13,13 @@ $(document).ready(function () {
 
     $('#todayBtn').click(function () {
         let today = new Date().toISOString().split('T')[0];
-        $('#departureDate').val(today);
+        $('#DepartureDate').val(today);
     });
 
     $('#tomorrowBtn').click(function () {
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         let formatted = tomorrow.toISOString().split('T')[0];
-        $('#departureDate').val(formatted);
+        $('#DepartureDate').val(formatted);
     });
 });
