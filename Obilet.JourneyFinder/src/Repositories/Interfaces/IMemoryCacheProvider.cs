@@ -1,5 +1,3 @@
-using Models;
-
 namespace Repository.Interfaces;
 
 public interface IMemoryCacheProvider

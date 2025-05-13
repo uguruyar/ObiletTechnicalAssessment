@@ -15,7 +15,8 @@ public class ObiletSessionMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IMemoryCacheProvider memoryCacheProvider, IObiletApiClient client)
+    public async Task InvokeAsync(HttpContext context, IMemoryCacheProvider memoryCacheProvider,
+        IObiletApiClient client)
     {
         if (memoryCacheProvider.Get<SessionData>(Constants.ObiletSessionKey) == null)
         {

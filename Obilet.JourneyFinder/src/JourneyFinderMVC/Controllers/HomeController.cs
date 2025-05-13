@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using JourneyFinderMVC.Models;
+using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace JourneyFinderMVC.Controllers;
