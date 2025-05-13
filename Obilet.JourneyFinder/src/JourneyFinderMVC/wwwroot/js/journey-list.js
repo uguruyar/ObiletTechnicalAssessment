@@ -1,0 +1,1 @@
+console.log("Info log : Journey list page loaded.");

@@ -16,8 +16,8 @@ public class JourneyService : IJourneyService
         _memoryCacheProvider = repo;
         _apiClient = apiClient;
     }
-    
-    public async Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search=null)
+
+    public async Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search = null)
     {
         var session = await GetSessionAsync();
 
@@ -35,8 +35,8 @@ public class JourneyService : IJourneyService
 
         return await _apiClient.CallObiletEndpoint<GetBusLocationsResponse>("api/location/getbuslocations", body);
     }
-    
-    public async Task<GetJourneysResponse?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate)
+
+    public async Task<List<JourneySummary>?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate)
     {
         var session = await GetSessionAsync();
 
@@ -57,9 +57,24 @@ public class JourneyService : IJourneyService
             }
         };
 
-        return await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
+        var response =  await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
+
+        if (response?.Data == null)
+            return new List<JourneySummary>();
+        
+        var journeySummaries = response.Data.Select(j => new JourneySummary
+        {
+            Origin = j.OriginLocation,
+            Destination = j.DestinationLocation,
+            Departure = j.Journey.Departure,
+            Arrival = j.Journey.Arrival,
+            OriginalPrice = j.Journey.OriginalPrice,
+            Currency = j.Journey.Currency
+        }).ToList();
+
+        return journeySummaries;
     }
-    
+
     private async Task<SessionData> GetSessionAsync()
     {
         var session = _memoryCacheProvider.Get();
