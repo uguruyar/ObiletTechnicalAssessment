@@ -16,7 +16,8 @@ public class BusLocationService : IBusLocationService
         _memoryCacheProvider = memoryCacheProvider;
     }
 
-    public async Task<List<BusLocation>> GetBusLocationAsync(string origin = null, CancellationToken cancellationToken = default)
+    public async Task<List<BusLocation>> GetBusLocationAsync(string origin = null,
+        CancellationToken cancellationToken = default)
     {
         var journeys = _memoryCacheProvider.Get<List<BusLocation>>(Constants.BusLocationCacheKey);
 
@@ -27,7 +28,9 @@ public class BusLocationService : IBusLocationService
             journeys = response.Data;
             _memoryCacheProvider.Save(Constants.BusLocationCacheKey, journeys);
         }
-        
-        return string.IsNullOrWhiteSpace(origin) ? journeys : journeys.Where(x => x.Name!.Contains(origin) || x.Keywords!.Contains(origin) ).ToList();
+
+        return string.IsNullOrWhiteSpace(origin)
+            ? journeys
+            : journeys.Where(x => x.Name!.Contains(origin) || x.Keywords!.Contains(origin)).ToList();
     }
 }

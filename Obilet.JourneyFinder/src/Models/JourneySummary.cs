@@ -7,5 +7,5 @@ public class JourneySummary
     public DateTime Departure { get; set; }
     public DateTime Arrival { get; set; }
     public decimal OriginalPrice { get; set; }
-    public string? Currency { get; set; }  
+    public string? Currency { get; set; }
 }

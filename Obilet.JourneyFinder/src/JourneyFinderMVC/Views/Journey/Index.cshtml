@@ -1,11 +1,12 @@
-﻿@model List<Models.JourneySummary>
+﻿@using System.Globalization
+@model List<Models.JourneySummary>
 
 @{
     Layout = null;
 
     var first = Model.FirstOrDefault();
     var routeText = $"{first?.Origin} - {first?.Destination}";
-    var dateText = first?.Departure.ToString("dd MMMM dddd", new System.Globalization.CultureInfo("tr-TR"));
+    var dateText = first?.Departure.ToString("dd MMMM dddd", new CultureInfo("tr-TR"));
 }
 
 <!DOCTYPE html>
@@ -17,34 +18,34 @@
 </head>
 <body>
 <div class="page-wrapper">
-<div class="container">
-    <div class="header">
-        <a href="/" class="back-button">←</a>
-        <h2>@routeText</h2>
-        <p>@dateText</p>
-    </div>
-
-    @foreach (var journey in Model)
-    {
-        <div class="trip-card">
-            <div>
-                <div class="trip-info">
-                    <span>KALKIŞ</span>
-                    <span>VARIŞ</span>
-                </div>
-                <div class="times">
-                    @journey.Departure.ToString("HH:mm") → @journey.Arrival.ToString("HH:mm")
-                </div>
-                <div class="location">
-                    @journey.Origin - @journey.Destination
-                </div>
-            </div>
-            <div class="price-badge">
-                @journey.OriginalPrice.ToString("N2") @journey.Currency
-            </div>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-button">←</a>
+            <h2>@routeText</h2>
+            <p>@dateText</p>
         </div>
-    }
-</div>
+
+        @foreach (var journey in Model)
+        {
+            <div class="trip-card">
+                <div>
+                    <div class="trip-info">
+                        <span>KALKIŞ</span>
+                        <span>VARIŞ</span>
+                    </div>
+                    <div class="times">
+                        @journey.Departure.ToString("HH:mm") → @journey.Arrival.ToString("HH:mm")
+                    </div>
+                    <div class="location">
+                        @journey.Origin - @journey.Destination
+                    </div>
+                </div>
+                <div class="price-badge">
+                    @journey.OriginalPrice.ToString("N2") @journey.Currency
+                </div>
+            </div>
+        }
+    </div>
 </div>
 <script src="~/js/journey-list.js"></script>
 </body>

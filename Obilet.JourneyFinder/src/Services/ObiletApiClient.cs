@@ -22,17 +22,18 @@ public class ObiletApiClient : IObiletApiClient
         // TODO :Get Url from Options
         _client.BaseAddress = new Uri("https://v2-api.obilet.com/");
         // TODO :Get Token value from Options
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "JEcYcEMyantZV095WVc3G2JtVjNZbWx1");
+        _client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Basic", "JEcYcEMyantZV095WVc3G2JtVjNZbWx1");
     }
 
     public async Task<SessionData> GetSessionAsync()
     {
         var ip = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "127.0.0.1";
-        
+
         var request = new SessionRequest
         {
             Type = 1,
-            Connection = new Connection { IpAddress = ip, Port = _port  },
+            Connection = new Connection { IpAddress = ip, Port = _port },
             Browser = new Browser { Name = "Chrome", Version = "47.0.0.12" }
         };
 
@@ -51,9 +52,9 @@ public class ObiletApiClient : IObiletApiClient
             CreatedAt = DateTime.UtcNow
         };
     }
-    
+
     public async Task<T> CallObiletEndpoint<T>(string url, object body)
-    { 
+    {
         var response = await _client.PostAsJsonAsync(url, body);
         response.EnsureSuccessStatusCode();
 
@@ -68,6 +69,5 @@ public class ObiletApiClient : IObiletApiClient
             throw new InvalidOperationException($"Deserialization failed. JSON: {json}");
 
         return result;
-        
     }
 }

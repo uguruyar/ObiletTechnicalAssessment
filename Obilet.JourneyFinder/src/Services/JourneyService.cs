@@ -9,8 +9,8 @@ namespace Services;
 
 public class JourneyService : IJourneyService
 {
-    private readonly IMemoryCacheProvider _memoryCacheProvider;
     private readonly IObiletApiClient _apiClient;
+    private readonly IMemoryCacheProvider _memoryCacheProvider;
 
     public JourneyService(IMemoryCacheProvider repo, IObiletApiClient apiClient)
     {
@@ -34,12 +34,10 @@ public class JourneyService : IJourneyService
             }
         };
 
-        var response = await _apiClient.CallObiletEndpoint<GetBusLocationsResponse>("api/location/getbuslocations", body);
+        var response =
+            await _apiClient.CallObiletEndpoint<GetBusLocationsResponse>("api/location/getbuslocations", body);
 
-        if (response.Status != "Success")
-        {
-            throw new Exception(response.UserMessage);
-        }
+        if (response.Status != "Success") throw new Exception(response.UserMessage);
         return response;
     }
 
@@ -64,16 +62,13 @@ public class JourneyService : IJourneyService
             }
         };
 
-        var response =  await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
+        var response = await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
 
-        if (response.Status != "Success")
-        {
-            throw new Exception(response.UserMessage);
-        }
-        
+        if (response.Status != "Success") throw new Exception(response.UserMessage);
+
         if (response?.Data == null)
             return new List<JourneySummary>();
-        
+
         var journeySummaries = response.Data.Select(j => new JourneySummary
         {
             Origin = j.OriginLocation,
@@ -93,7 +88,7 @@ public class JourneyService : IJourneyService
         if (session == null)
         {
             session = await _apiClient.GetSessionAsync();
-            _memoryCacheProvider.Save(Constants.ObiletSessionKey,session);
+            _memoryCacheProvider.Save(Constants.ObiletSessionKey, session);
         }
 
         return session;
