@@ -7,23 +7,16 @@ namespace Repository;
 // Refactor here. 
 public class MemoryCacheProvider(IMemoryCache memoryCache) : IMemoryCacheProvider
 {
-    private const string CacheKey = "ObiletSession";
     
     // This method only works if 1 instance runs.
     // Sessions for 2 or more instances can be kept in Redis.
-    public SessionData? Get()
+    public T? Get<T>(string cacheKey)
     {
-        memoryCache.TryGetValue(CacheKey, out SessionData? session);
-        return session;
+        memoryCache.TryGetValue(cacheKey, out T? TData);
+        return TData;
     }
     
-    // public T? Get<T>()
-    // {
-    //     memoryCache.TryGetValue(CacheKey, out T? cacheData);
-    //     return cacheData;
-    // }
-    
-    public void Save(object cacheData)
+    public void Save(string cacheKey, object cacheData)
     {
         var cacheOptions = new MemoryCacheEntryOptions
         {
@@ -31,6 +24,6 @@ public class MemoryCacheProvider(IMemoryCache memoryCache) : IMemoryCacheProvide
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) 
         };
     
-        memoryCache.Set(CacheKey, cacheData, cacheOptions);
+        memoryCache.Set(cacheKey, cacheData, cacheOptions);
     }
 }

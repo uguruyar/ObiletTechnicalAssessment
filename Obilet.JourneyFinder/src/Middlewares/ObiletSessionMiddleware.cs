@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Http;
+using Models;
+using Models.Base;
 using Repository.Interfaces;
 using Services.Interfaces;
 
@@ -15,10 +17,10 @@ public class ObiletSessionMiddleware
 
     public async Task InvokeAsync(HttpContext context, IMemoryCacheProvider memoryCacheProvider, IObiletApiClient client)
     {
-        if (memoryCacheProvider.Get() == null)
+        if (memoryCacheProvider.Get<SessionData>(Constants.ObiletSessionKey) == null)
         {
             var session = await client.GetSessionAsync();
-            memoryCacheProvider.Save(session);
+            memoryCacheProvider.Save(Constants.ObiletSessionKey, session);
         }
 
         await _next(context);

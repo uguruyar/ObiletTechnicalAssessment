@@ -13,6 +13,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<IObiletApiClient, ObiletApiClient>();
 builder.Services.AddSingleton<IMemoryCacheProvider, MemoryCacheProvider>();
 builder.Services.AddScoped<IJourneyService, JourneyService>();
+builder.Services.AddScoped<IBusLocationService, BusLocationService>();
 
 var app = builder.Build();
 

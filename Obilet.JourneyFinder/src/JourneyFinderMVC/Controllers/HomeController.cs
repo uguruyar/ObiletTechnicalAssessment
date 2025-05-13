@@ -7,21 +7,29 @@ namespace JourneyFinderMVC.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IBusLocationService _busLocationService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IBusLocationService busLocationService)
     {
-        _logger = logger;
+        _busLocationService = busLocationService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
-    }
+        var journeys = await _busLocationService.GetBusLocationAsync();
 
-    public IActionResult Privacy()
-    {
-        return View();
+        TempData["Journeys"] = journeys;
+
+        var model = new JourneySearchModel
+        {
+            Origin = journeys[0].Name,
+            OriginId = journeys[0].Id,
+            Destination = journeys[1].Name,
+            DestinationId = journeys[1].Id,
+            DepartureDate = DateTime.Today
+        };
+
+        return View(model);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
