@@ -4,7 +4,6 @@ namespace Repository.Interfaces;
 
 public interface IMemoryCacheProvider
 {
-    SessionData? Get();
-    // T? Get<T>();
-    void Save(object cacheData);
+    T? Get<T>(string cacheKey);
+    void Save(string cacheKey, object cacheData);
 }

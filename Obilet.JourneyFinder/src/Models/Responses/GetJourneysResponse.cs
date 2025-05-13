@@ -9,6 +9,9 @@ public class GetJourneysResponse
 
     [JsonPropertyName("data")]
     public List<JourneyItem>? Data { get; set; }
+    
+    [JsonPropertyName("user-message")]
+    public string? UserMessage { get; set; }
 }
 
 public class JourneyItem

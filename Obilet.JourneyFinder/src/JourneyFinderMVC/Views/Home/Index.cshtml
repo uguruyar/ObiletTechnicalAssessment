@@ -1,8 +1,73 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Models.Responses
+@model JourneyFinderMVC.Models.JourneySearchModel
+
+@{
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bilet Ara</title>
+    <link rel="stylesheet" href="~/css/site.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+</head>
+<body>
+
+<div class="outer-container">
+
+    <div class="inner-box"></div>
+    
+    <form asp-action="Index" asp-controller="Journey"  method="post">
+        <div class="card">
+            <div class="form-group">
+                <label>Nereden</label>
+                <select name="OriginId">
+                    @foreach (var journey in (List<BusLocation>)TempData["journeys"])
+                    {
+                        if (journey.Id == Model.OriginId)
+                        {
+                            <option value="@journey.Id" selected>@journey.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@journey.Id">@journey.Name</option>
+                        }
+                    }
+                </select>
+                <button type="button" id="switchBtn">⇅</button>
+            </div>
+            <div class="form-group">
+                <label>Nereye</label>
+                <select name="DestinationId">
+                    @foreach (var journey in (List<BusLocation>)TempData["journeys"])
+                    {
+                        if (journey.Id == Model.DestinationId)
+                        {
+                            <option value="@journey.Id" selected>@journey.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@journey.Id">@journey.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tarih</label>
+                <input type="date" name="DepartureDate" id="DepartureDate"
+                       value="@Model.DepartureDate.ToString("yyyy-MM-dd")"/>
+                <button type="button" id="todayBtn">Bugün</button>
+                <button type="button" id="tomorrowBtn">Yarın</button>
+            </div>
+            <button type="submit">Bileti Bul</button>
+        </div>
+    </form>
 </div>
+
+
+<script src="~/js/site.js"></script>
+</body>
+</html>
