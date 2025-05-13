@@ -1,0 +1,51 @@
+﻿@model List<Models.JourneySummary>
+
+@{
+    Layout = null;
+
+    var first = Model.FirstOrDefault();
+    var routeText = $"{first?.Origin} - {first?.Destination}";
+    var dateText = first?.Departure.ToString("dd MMMM dddd", new System.Globalization.CultureInfo("tr-TR"));
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Yolculuklar</title>
+    <link rel="stylesheet" href="~/css/journey-list.css"/>
+</head>
+<body>
+<div class="page-wrapper">
+<div class="container">
+    <div class="header">
+        <a href="/" class="back-button">←</a>
+        <h2>@routeText</h2>
+        <p>@dateText</p>
+    </div>
+
+    @foreach (var journey in Model)
+    {
+        <div class="trip-card">
+            <div>
+                <div class="trip-info">
+                    <span>KALKIŞ</span>
+                    <span>VARIŞ</span>
+                </div>
+                <div class="times">
+                    @journey.Departure.ToString("HH:mm") → @journey.Arrival.ToString("HH:mm")
+                </div>
+                <div class="location">
+                    @journey.Origin - @journey.Destination
+                </div>
+            </div>
+            <div class="price-badge">
+                @journey.OriginalPrice.ToString("N2") @journey.Currency
+            </div>
+        </div>
+    }
+</div>
+</div>
+<script src="~/js/journey-list.js"></script>
+</body>
+</html>

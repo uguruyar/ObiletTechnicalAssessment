@@ -1,12 +1,11 @@
+using Models;
 using Models.Responses;
 
 namespace Services.Interfaces;
 
 public interface IJourneyService
 {
-    Task<string> GetBusLocationsSearchAsync(string search);
+    Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search=null);
     
-    Task<string> GetAllBusLocationsAsync();
-    
-    Task<GetJourneysResponse?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate);
+    Task<List<JourneySummary>?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate);
 }

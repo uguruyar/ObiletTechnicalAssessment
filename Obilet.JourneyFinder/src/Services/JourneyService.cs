@@ -1,5 +1,3 @@
-using System.Text.Json;
-using Infrastructure.Interfaces;
 using Models;
 using Models.Requests;
 using Models.Responses;
@@ -10,16 +8,16 @@ namespace Services;
 
 public class JourneyService : IJourneyService
 {
-    private readonly ISessionRepository _sessionRepository;
+    private readonly IMemoryCacheProvider _memoryCacheProvider;
     private readonly IObiletApiClient _apiClient;
 
-    public JourneyService(ISessionRepository repo, IObiletApiClient apiClient)
+    public JourneyService(IMemoryCacheProvider repo, IObiletApiClient apiClient)
     {
-        _sessionRepository = repo;
+        _memoryCacheProvider = repo;
         _apiClient = apiClient;
     }
-    
-    public async Task<string> GetBusLocationsSearchAsync(string search)
+
+    public async Task<GetBusLocationsResponse> GetBusLocationsAsync(string? search = null)
     {
         var session = await GetSessionAsync();
 
@@ -35,29 +33,10 @@ public class JourneyService : IJourneyService
             }
         };
 
-        return await _apiClient.CallObiletEndpoint("api/location/getbuslocations", body);
+        return await _apiClient.CallObiletEndpoint<GetBusLocationsResponse>("api/location/getbuslocations", body);
     }
 
-    public async Task<string> GetAllBusLocationsAsync()
-    {
-        var session = await GetSessionAsync();
-
-        var body = new GetBusLocationsRequest
-        {
-            Data = null,
-            Language = "tr-TR",
-            Date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-            DeviceSession = new DeviceSession
-            {
-                SessionId = session.SessionId,
-                DeviceId = session.DeviceId
-            }
-        };
-
-        return await _apiClient.CallObiletEndpoint("api/location/getbuslocations", body);
-    }
-    
-    public async Task<GetJourneysResponse?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate)
+    public async Task<List<JourneySummary>?> GetJourneysAsync(int originId, int destinationId, DateTime departureDate)
     {
         var session = await GetSessionAsync();
 
@@ -78,25 +57,31 @@ public class JourneyService : IJourneyService
             }
         };
 
-        var jsonResponse = await _apiClient.CallObiletEndpoint("api/journey/getbusjourneys", request);
+        var response =  await _apiClient.CallObiletEndpoint<GetJourneysResponse>("api/journey/getbusjourneys", request);
 
-        var options = new JsonSerializerOptions
+        if (response?.Data == null)
+            return new List<JourneySummary>();
+        
+        var journeySummaries = response.Data.Select(j => new JourneySummary
         {
-            PropertyNameCaseInsensitive = true
-        };
+            Origin = j.OriginLocation,
+            Destination = j.DestinationLocation,
+            Departure = j.Journey.Departure,
+            Arrival = j.Journey.Arrival,
+            OriginalPrice = j.Journey.OriginalPrice,
+            Currency = j.Journey.Currency
+        }).ToList();
 
-        var journeysResponse = JsonSerializer.Deserialize<GetJourneysResponse>(jsonResponse, options);
-
-        return journeysResponse;
+        return journeySummaries;
     }
-    
+
     private async Task<SessionData> GetSessionAsync()
     {
-        var session = _sessionRepository.Get();
+        var session = _memoryCacheProvider.Get();
         if (session == null)
         {
             session = await _apiClient.GetSessionAsync();
-            _sessionRepository.Save(session);
+            _memoryCacheProvider.Save(session);
         }
 
         return session;

@@ -1,12 +1,13 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Infrastructure.Interfaces;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Models;
 using Models.Requests;
 using Models.Responses;
+using Services.Interfaces;
 
-namespace Infrastructure.HttpClients;
+namespace Services;
 
 public class ObiletApiClient : IObiletApiClient
 {
@@ -50,11 +51,23 @@ public class ObiletApiClient : IObiletApiClient
             CreatedAt = DateTime.UtcNow
         };
     }
-
-    public async Task<string> CallObiletEndpoint(string url, object body)
-    {
+    
+    public async Task<T> CallObiletEndpoint<T>(string url, object body)
+    { 
         var response = await _client.PostAsJsonAsync(url, body);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        var result = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        if (result is null)
+            throw new InvalidOperationException($"Deserialization failed. JSON: {json}");
+
+        return result;
+        
     }
 }
